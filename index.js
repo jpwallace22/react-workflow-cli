@@ -7,8 +7,8 @@
 
 const fs = require("fs");
 const program = require("commander");
-const Commands = require("./src/commands");
-const DEFAULT_DIR = require("./src/config").DEFAULT_DIR;
+const Commands = require("./src/commands.js");
+const DEFAULT_DIR = require("./src/config.js").DEFAULT_DIR;
 
 const main = () => {
   const commands = new Commands();
