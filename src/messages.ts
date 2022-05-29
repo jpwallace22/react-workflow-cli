@@ -2,7 +2,7 @@ const DEFAULT_PATH = require("./config").DEFAULT_PATH;
 
 const HELP_MSG = `
 NAME
-    create-react-component-cli — react cli to create templated component
+    create-react-component-cli — react cli to create templated component TEST
 
 DESCRIPTION
     Create-react-component-cli allows to create react component easilt providing an interface

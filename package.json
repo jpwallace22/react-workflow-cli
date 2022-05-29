@@ -2,24 +2,32 @@
   "name": "react-workflow-cli",
   "version": "1.4.1",
   "description": "A CLI for creating new react components",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc",
+    "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/index.js\""
   },
-  "author": "Justin Wallace / Gabriele Venturi",
+  "author": "Justin Wallace",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/jpwallace22/react-workflow-cli.git"
   },
   "bin": {
-    "react-workflow": "./index.js",
-    "rwf": "./index.js"
+    "react-workflow": "./dist/index.js",
+    "rwf": "./dist/index.js"
   },
   "dependencies": {
+    "chalk": "^5.0.1",
     "commander": "^2.19.0",
     "comment-parser": "^0.7.2",
     "inquirer": "^6.2.2",
     "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16",
+    "rimraf": "^3.0.2"
   }
 }
