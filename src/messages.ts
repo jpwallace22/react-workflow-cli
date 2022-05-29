@@ -1,11 +1,12 @@
-const DEFAULT_PATH = require("./config").DEFAULT_PATH;
+import { DEFAULT_PATH } from "./config";
+import chalk from "chalk";
 
-const HELP_MSG = `
-NAME
-    react-workflow-cli — react cli to create templated component TEST
+export const HELP_MSG = `
+${chalk.blue("Name")}
+    react-workflow-cli — react cli to create templated component
 
 DESCRIPTION
-    react-workflow-cli allows to create react component easilt providing an interface
+    react-workflow-cli allows to create react components easily providing an interface
     implement your own template.
 
 SYNOPSIS
@@ -30,15 +31,13 @@ SEE ALSO
     Documentation:
 
 AUTHORS
-    Gabriele Venturi (https://github.com/gventuri)
+    Justin Wallace (https://github.com/jpwallace22)
 
 CONTRIBUTORS
     Gianni Valdambrini (https://github.com/gvaldambrini)
     Roberto Di Lillo (https://github.com/koop4)
     Valentino Gagliardi (https://github.com/valentinogagliardi/)
 `;
-const WRONG_PATH_MSG = `The path provided is wrong`;
-const PROJ_INIT = `The project has been initialized`;
-const ALREADY_INIT = `The project has already been initialized`;
-
-module.exports = { HELP_MSG, WRONG_PATH_MSG, PROJ_INIT, ALREADY_INIT };
+export const WRONG_PATH_MSG = `The path provided is wrong`;
+export const PROJ_INIT = `The project has been initialized`;
+export const ALREADY_INIT = `The project has already been initialized`;

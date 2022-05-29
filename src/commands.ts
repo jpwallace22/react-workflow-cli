@@ -1,13 +1,10 @@
-const fs = require("fs");
-const inquirer = require("inquirer");
-const messages = require("./messages");
-const parser = require("comment-parser");
-const _ = require("lodash");
+import fs from "fs";
+import inquirer from "inquirer";
+import * as messages from "./messages";
+import parser from "comment-parser";
+import _ from "lodash";
 
-const CONFIG = require("./config").CONFIG;
-const DEFAULT_PATH = require("./config").DEFAULT_PATH;
-const DIR = require("./config").DIR;
-const DEFAULT_DIR = require("./config").DEFAULT_DIR;
+import { CONFIG, DEFAULT_DIR, DEFAULT_PATH, DIR } from "./config";
 
 class Commands {
   /**
@@ -57,17 +54,17 @@ class Commands {
         name: "path",
         message:
           "Please, provide the path where your components will be stored",
-        default: "src/components"
+        default: "src/components",
       },
       {
         type: "confirm",
         name: "storybook",
         message: "Do you want to enable the support for Storybook?",
-        default: true
-      }
+        default: true,
+      },
     ];
 
-    inquirer.prompt(questions).then(function(answers) {
+    inquirer.prompt(questions).then(function (answers) {
       try {
         fs.writeFileSync(`${DEFAULT_DIR}/config.json`, JSON.stringify(answers));
       } catch (err) {
@@ -126,7 +123,7 @@ const createFile = (file, name, path) => {
   });
 
   const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
-  const finalData = data.replace(regex, function(match, _p1, _p2, p3) {
+  const finalData = data.replace(regex, function (match, _p1, _p2, p3) {
     let newName = name;
 
     if (p3) {
@@ -155,4 +152,4 @@ const warnAndExit = error => {
   process.exit(-1);
 };
 
-module.exports = Commands;
+export default Commands;

@@ -5,10 +5,10 @@
  * A CLI for creating new react components
  */
 
-const fs = require("fs");
-const program = require("commander");
-const Commands = require("./src/commands");
-const DEFAULT_DIR = require("./src/config").DEFAULT_DIR;
+import fs from "fs";
+import program from "commander";
+import Commands from "./src/commands";
+import { DEFAULT_DIR } from "./src/config";
 
 const main = () => {
   const commands = new Commands();

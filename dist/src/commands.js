@@ -1,13 +1,37 @@
 "use strict";
-var fs = require("fs");
-var inquirer = require("inquirer");
-var messages = require("./messages");
-var parser = require("comment-parser");
-var _ = require("lodash");
-var CONFIG = require("./config").CONFIG;
-var DEFAULT_PATH = require("./config").DEFAULT_PATH;
-var DIR = require("./config").DIR;
-var DEFAULT_DIR = require("./config").DEFAULT_DIR;
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs_1 = __importDefault(require("fs"));
+var inquirer_1 = __importDefault(require("inquirer"));
+var messages = __importStar(require("./messages"));
+var comment_parser_1 = __importDefault(require("comment-parser"));
+var lodash_1 = __importDefault(require("lodash"));
+var config_1 = require("./config");
 var Commands = /** @class */ (function () {
     function Commands() {
     }
@@ -23,13 +47,13 @@ var Commands = /** @class */ (function () {
     Commands.prototype.init = function () {
         var _this = this;
         try {
-            if (DIR === DEFAULT_DIR)
+            if (config_1.DIR === config_1.DEFAULT_DIR)
                 warnAndExit(messages.ALREADY_INIT);
-            fs.mkdirSync(DEFAULT_DIR, { recursive: true });
-            var files = fs.readdirSync(DIR);
+            fs_1.default.mkdirSync(config_1.DEFAULT_DIR, { recursive: true });
+            var files = fs_1.default.readdirSync(config_1.DIR);
             var _loop_1 = function (file) {
-                var data = fs.readFileSync("".concat(DIR, "/").concat(file), "utf-8");
-                fs.writeFile("".concat(DEFAULT_DIR, "/").concat(file), data, function (err) {
+                var data = fs_1.default.readFileSync("".concat(config_1.DIR, "/").concat(file), "utf-8");
+                fs_1.default.writeFile("".concat(config_1.DEFAULT_DIR, "/").concat(file), data, function (err) {
                     if (err) {
                         console.log("Cannot create \"".concat(file, "\""));
                     }
@@ -47,7 +71,7 @@ var Commands = /** @class */ (function () {
         }
         catch (err) {
             console.log(err);
-            warnAndExit("Cannot create the directory \"".concat(DEFAULT_DIR, "\"."));
+            warnAndExit("Cannot create the directory \"".concat(config_1.DEFAULT_DIR, "\"."));
         }
     };
     /**
@@ -59,18 +83,18 @@ var Commands = /** @class */ (function () {
                 type: "input",
                 name: "path",
                 message: "Please, provide the path where your components will be stored",
-                default: "src/components"
+                default: "src/components",
             },
             {
                 type: "confirm",
                 name: "storybook",
                 message: "Do you want to enable the support for Storybook?",
-                default: true
-            }
+                default: true,
+            },
         ];
-        inquirer.prompt(questions).then(function (answers) {
+        inquirer_1.default.prompt(questions).then(function (answers) {
             try {
-                fs.writeFileSync("".concat(DEFAULT_DIR, "/config.json"), JSON.stringify(answers));
+                fs_1.default.writeFileSync("".concat(config_1.DEFAULT_DIR, "/config.json"), JSON.stringify(answers));
             }
             catch (err) {
                 warnAndExit("You need to initialize the cli before you configure it.");
@@ -81,20 +105,20 @@ var Commands = /** @class */ (function () {
      * ADD
      */
     Commands.prototype.add = function (name, path) {
-        path = path || DEFAULT_PATH;
-        if (!fs.existsSync(path))
+        path = path || config_1.DEFAULT_PATH;
+        if (!fs_1.default.existsSync(path))
             warnAndExit(messages.WRONG_PATH_MSG);
         try {
-            fs.mkdirSync("".concat(path, "/").concat(name, "/"), { recursive: true });
+            fs_1.default.mkdirSync("".concat(path, "/").concat(name, "/"), { recursive: true });
         }
         catch (err) {
             warnAndExit("Cannot create the directory \"".concat(path, "/").concat(name, "\"."));
         }
-        var templates = fs
-            .readdirSync(DIR)
+        var templates = fs_1.default
+            .readdirSync(config_1.DIR)
             .filter(function (file) {
             return file !== "config.json" &&
-                (CONFIG.storybook === true || file !== "$name.stories.js");
+                (config_1.CONFIG.storybook === true || file !== "$name.stories.js");
         });
         for (var _i = 0, templates_1 = templates; _i < templates_1.length; _i++) {
             var template = templates_1[_i];
@@ -108,32 +132,32 @@ var Commands = /** @class */ (function () {
  */
 var createFile = function (file, name, path) {
     var fileName = file.replace("$name", name);
-    if (fs.existsSync("".concat(path, "/").concat(name, "/").concat(fileName))) {
+    if (fs_1.default.existsSync("".concat(path, "/").concat(name, "/").concat(fileName))) {
         console.log("File \"".concat(fileName, "\" already exists, skipping."));
         return;
     }
-    var data = fs.readFileSync("".concat(DIR, "/").concat(file), "utf-8");
-    var parsed = parser(data);
-    var tags = _.get(parsed, "0.tags", []);
+    var data = fs_1.default.readFileSync("".concat(config_1.DIR, "/").concat(file), "utf-8");
+    var parsed = (0, comment_parser_1.default)(data);
+    var tags = lodash_1.default.get(parsed, "0.tags", []);
     tags.map(function (_a) {
         var tag = _a.tag, name = _a.name;
         if (tag === "caseType") {
             var splittedFilename = fileName.split(".");
-            fileName = "".concat(_[name](splittedFilename.slice(0, splittedFilename.length - 1).join(".")), ".").concat(splittedFilename.slice(splittedFilename.length - 1)[0]);
+            fileName = "".concat(lodash_1.default[name](splittedFilename.slice(0, splittedFilename.length - 1).join(".")), ".").concat(splittedFilename.slice(splittedFilename.length - 1)[0]);
         }
     });
     var regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
     var finalData = data.replace(regex, function (match, _p1, _p2, p3) {
         var newName = name;
         if (p3) {
-            _.map(JSON.parse(p3), function (value, key) {
+            lodash_1.default.map(JSON.parse(p3), function (value, key) {
                 if (key === "caseType")
-                    newName = _[value](newName);
+                    newName = lodash_1.default[value](newName);
             });
         }
         return newName;
     });
-    fs.writeFileSync("".concat(path, "/").concat(name, "/").concat(fileName), finalData, function (err) {
+    fs_1.default.writeFileSync("".concat(path, "/").concat(name, "/").concat(fileName), finalData, function (err) {
         if (err) {
             console.log("Cannot create \"".concat(fileName, "\""));
         }
@@ -149,4 +173,4 @@ var warnAndExit = function (error) {
     console.warn(error);
     process.exit(-1);
 };
-module.exports = Commands;
+exports.default = Commands;
