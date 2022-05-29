@@ -4,26 +4,26 @@ Add new commands in the command line to create react components very fast and ea
 
 ## Setup
 
-To setup create-react-component, you need to run `npm install -g create-react-component-cli`.
+To setup create-react-component, you need to run `npm install -g react-workflow-cli`.
 
 This command will install the CLI globally, so that you can run it in any react project from now on.
 
 ## Usage
 
-To create a new react component, you need to run `create-react-component add <ComponentName>`, or `crc add <ComponentName>`.
+To create a new react component, you need to run `react-workflow-cli add <ComponentName>`, or `rwf add <ComponentName>`.
 This will create a new component and its default dependencies in the default directory (src/components).
 
-In case you don't want to use the default directory, you can pass a custom path as a parameter (i.e. `crc add <ComponentName> --path=my/custom/dir`) This will create the element in the provided directory.
+In case you don't want to use the default directory, you can pass a custom path as a parameter (i.e. `rwf add <ComponentName> --path=my/custom/dir`) This will create the element in the provided directory.
 
-If you want to have a look at all the functionalities of the the CLI, just run `crc help`, and all the functionalities will be explained.
+If you want to have a look at all the functionalities of the the CLI, just run `rwf help`, and all the functionalities will be explained.
 
 ### Initialize a new project
 
 If you need a more advanced experience with the CLI, you'd probabily want to instantiate the CLI for your current project, so that you will be able to customize some more settings.
-In order to do that, you need to run `crc init`. This will create a folder `.react-templates` in the path where you run the command.
+In order to do that, you need to run `rwf init`. This will create a folder `.react-templates` in the path where you run the command.
 During the setup, you will be asked a few questions required to create the configuration file.
 
-You will be able to customize the file by editing it directly (`.react-templates/config.json`) or by running `crc config`.
+You will be able to customize the file by editing it directly (`.react-templates/config.json`) or by running `rwf config`.
 
 ### Manage templates
 

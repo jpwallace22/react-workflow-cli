@@ -2,14 +2,14 @@ const DEFAULT_PATH = require("./config").DEFAULT_PATH;
 
 const HELP_MSG = `
 NAME
-    create-react-component-cli — react cli to create templated component TEST
+    react-workflow-cli — react cli to create templated component TEST
 
 DESCRIPTION
-    Create-react-component-cli allows to create react component easilt providing an interface
+    react-workflow-cli allows to create react component easilt providing an interface
     implement your own template.
 
 SYNOPSIS
-    create-react-component <command> [name] [options]
+    react-workflow-cli <command> [name] [options]
 
 AVAILABLE COMMAND:
     init    initialize the cli
@@ -20,12 +20,12 @@ OPTIONS
     -path   override default path.
 
 COPYRIGHT
-    create-react-component-cli is available under the MIT license.
-    create-react-component-cli also includes external libraries that are available under MIT license.
+    react-workflow-cli is available under the MIT license.
+    react-workflow-cli also includes external libraries that are available under MIT license.
 
 SEE ALSO
     GitHub repository & Issue Tracker: https://github.com/gventuri/create-react-component
-    Npmjs: https://www.npmjs.com/package/create-react-component-cli
+    Npmjs: https://www.npmjs.com/package/react-workflow-cli
     Website:
     Documentation:
 
