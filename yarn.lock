@@ -824,6 +824,16 @@ rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+"react-workflow-cli@https://github.com/jpwallace22/react-workflow-cli":
+  version "1.4.1"
+  resolved "https://github.com/jpwallace22/react-workflow-cli#9bd116e9bea1c4f37633189a37a5bffea977fcc5"
+  dependencies:
+    chalk "^5.0.1"
+    commander "^2.19.0"
+    comment-parser "^0.7.2"
+    inquirer "^6.2.2"
+    lodash "^4.17.15"
+
 readdirp@~3.6.0:
   version "3.6.0"
   resolved "https://registry.npmjs.org/readdirp/-/readdirp-3.6.0.tgz"

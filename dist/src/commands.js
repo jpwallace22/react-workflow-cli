@@ -1,84 +1,49 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = __importDefault(require("fs"));
-var inquirer_1 = __importDefault(require("inquirer"));
-var messages = __importStar(require("./messages"));
-var comment_parser_1 = __importDefault(require("comment-parser"));
-var lodash_1 = __importDefault(require("lodash"));
-var config_1 = require("./config");
-var Commands = /** @class */ (function () {
-    function Commands() {
-    }
+import fs from "fs";
+import inquirer from "inquirer";
+import * as messages from "./messages";
+import parser from "comment-parser";
+import _ from "lodash";
+import { CONFIG, DEFAULT_DIR, DEFAULT_PATH, DIR } from "./config";
+class Commands {
     /**
      * HELP
      */
-    Commands.prototype.help = function () {
+    help() {
         console.log(messages.HELP_MSG);
-    };
+    }
     /**
      * INIT
      */
-    Commands.prototype.init = function () {
-        var _this = this;
+    init() {
         try {
-            if (config_1.DIR === config_1.DEFAULT_DIR)
+            if (DIR === DEFAULT_DIR)
                 warnAndExit(messages.ALREADY_INIT);
-            fs_1.default.mkdirSync(config_1.DEFAULT_DIR, { recursive: true });
-            var files = fs_1.default.readdirSync(config_1.DIR);
-            var _loop_1 = function (file) {
-                var data = fs_1.default.readFileSync("".concat(config_1.DIR, "/").concat(file), "utf-8");
-                fs_1.default.writeFile("".concat(config_1.DEFAULT_DIR, "/").concat(file), data, function (err) {
+            fs.mkdirSync(DEFAULT_DIR, { recursive: true });
+            const files = fs.readdirSync(DIR);
+            for (let file of files) {
+                const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
+                fs.writeFile(`${DEFAULT_DIR}/${file}`, data, err => {
                     if (err) {
-                        console.log("Cannot create \"".concat(file, "\""));
+                        console.log(`Cannot create "${file}"`);
                     }
                     else {
-                        console.log("\"".concat(file, "\" created"));
+                        console.log(`"${file}" created`);
                     }
                 });
-            };
-            for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
-                var file = files_1[_i];
-                _loop_1(file);
             }
-            setTimeout(function () { return _this.config(); }, 200);
+            setTimeout(() => this.config(), 200);
             console.log(messages.PROJ_INIT);
         }
         catch (err) {
             console.log(err);
-            warnAndExit("Cannot create the directory \"".concat(config_1.DEFAULT_DIR, "\"."));
+            warnAndExit(`Cannot create the directory "${DEFAULT_DIR}".`);
         }
-    };
+    }
     /**
      * CONFIG
      */
-    Commands.prototype.config = function () {
-        var questions = [
+    config() {
+        const questions = [
             {
                 type: "input",
                 name: "path",
@@ -92,85 +57,79 @@ var Commands = /** @class */ (function () {
                 default: true,
             },
         ];
-        inquirer_1.default.prompt(questions).then(function (answers) {
+        inquirer.prompt(questions).then(function (answers) {
             try {
-                fs_1.default.writeFileSync("".concat(config_1.DEFAULT_DIR, "/config.json"), JSON.stringify(answers));
+                fs.writeFileSync(`${DEFAULT_DIR}/config.json`, JSON.stringify(answers));
             }
             catch (err) {
-                warnAndExit("You need to initialize the cli before you configure it.");
+                warnAndExit(`You need to initialize the cli before you configure it.`);
             }
         });
-    };
+    }
     /**
      * ADD
      */
-    Commands.prototype.add = function (name, path) {
-        path = path || config_1.DEFAULT_PATH;
-        if (!fs_1.default.existsSync(path))
+    add(name, path) {
+        path = path || DEFAULT_PATH;
+        if (!fs.existsSync(path))
             warnAndExit(messages.WRONG_PATH_MSG);
         try {
-            fs_1.default.mkdirSync("".concat(path, "/").concat(name, "/"), { recursive: true });
+            fs.mkdirSync(`${path}/${name}/`, { recursive: true });
         }
         catch (err) {
-            warnAndExit("Cannot create the directory \"".concat(path, "/").concat(name, "\"."));
+            warnAndExit(`Cannot create the directory "${path}/${name}".`);
         }
-        var templates = fs_1.default
-            .readdirSync(config_1.DIR)
-            .filter(function (file) {
-            return file !== "config.json" &&
-                (config_1.CONFIG.storybook === true || file !== "$name.stories.js");
-        });
-        for (var _i = 0, templates_1 = templates; _i < templates_1.length; _i++) {
-            var template = templates_1[_i];
+        const templates = fs
+            .readdirSync(DIR)
+            .filter(file => file !== "config.json" &&
+            (CONFIG.storybook === true || file !== "$name.stories.js"));
+        for (let template of templates)
             createFile(template, name, path);
-        }
-    };
-    return Commands;
-}());
+    }
+}
 /**
  * CREATE FILE
  */
-var createFile = function (file, name, path) {
-    var fileName = file.replace("$name", name);
-    if (fs_1.default.existsSync("".concat(path, "/").concat(name, "/").concat(fileName))) {
-        console.log("File \"".concat(fileName, "\" already exists, skipping."));
+const createFile = (file, name, path) => {
+    let fileName = file.replace("$name", name);
+    if (fs.existsSync(`${path}/${name}/${fileName}`)) {
+        console.log(`File "${fileName}" already exists, skipping.`);
         return;
     }
-    var data = fs_1.default.readFileSync("".concat(config_1.DIR, "/").concat(file), "utf-8");
-    var parsed = (0, comment_parser_1.default)(data);
-    var tags = lodash_1.default.get(parsed, "0.tags", []);
-    tags.map(function (_a) {
-        var tag = _a.tag, name = _a.name;
+    const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
+    const parsed = parser(data);
+    const tags = _.get(parsed, "0.tags", []);
+    tags.map(({ tag, name }) => {
         if (tag === "caseType") {
-            var splittedFilename = fileName.split(".");
-            fileName = "".concat(lodash_1.default[name](splittedFilename.slice(0, splittedFilename.length - 1).join(".")), ".").concat(splittedFilename.slice(splittedFilename.length - 1)[0]);
+            const splittedFilename = fileName.split(".");
+            fileName = `${_[name](splittedFilename.slice(0, splittedFilename.length - 1).join("."))}.${splittedFilename.slice(splittedFilename.length - 1)[0]}`;
         }
     });
-    var regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
-    var finalData = data.replace(regex, function (match, _p1, _p2, p3) {
-        var newName = name;
+    const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+    const finalData = data.replace(regex, function (match, _p1, _p2, p3) {
+        let newName = name;
         if (p3) {
-            lodash_1.default.map(JSON.parse(p3), function (value, key) {
+            _.map(JSON.parse(p3), (value, key) => {
                 if (key === "caseType")
-                    newName = lodash_1.default[value](newName);
+                    newName = _[value](newName);
             });
         }
         return newName;
     });
-    fs_1.default.writeFileSync("".concat(path, "/").concat(name, "/").concat(fileName), finalData, function (err) {
+    fs.writeFileSync(`${path}/${name}/${fileName}`, finalData, err => {
         if (err) {
-            console.log("Cannot create \"".concat(fileName, "\""));
+            console.log(`Cannot create "${fileName}"`);
         }
         else {
-            console.log("\"".concat(fileName, "\" has been created"));
+            console.log(`"${fileName}" has been created`);
         }
     });
 };
 /**
  * WARN AND EXIT
  */
-var warnAndExit = function (error) {
+const warnAndExit = error => {
     console.warn(error);
     process.exit(-1);
 };
-exports.default = Commands;
+export default Commands;

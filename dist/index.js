@@ -1,36 +1,31 @@
 #! /usr/bin/env node
-"use strict";
 /***
  * CREATE COMPONENT CLI
  * A CLI for creating new react components
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = __importDefault(require("fs"));
-var commander_1 = __importDefault(require("commander"));
-var commands_1 = __importDefault(require("./src/commands"));
-var config_1 = require("./src/config");
-var main = function () {
-    var commands = new commands_1.default();
-    commander_1.default.arguments("<cmd> [name]");
-    commander_1.default.command("help").action(function () { return commands.help(); });
-    commander_1.default
+import fs from "fs";
+import program from "commander";
+import Commands from "./src/commands";
+import { DEFAULT_DIR } from "./src/config";
+const main = () => {
+    const commands = new Commands();
+    program.arguments("<cmd> [name]");
+    program.command("help").action(() => commands.help());
+    program
         .command("add [name]")
         .option("-p, --path [path]")
-        .action(function (name, opt) {
+        .action((name, opt) => {
         commands.add(name, opt.path);
     });
-    commander_1.default.command("init").action(function () {
+    program.command("init").action(() => {
         commands.init();
     });
-    commander_1.default.command("config").action(function () {
+    program.command("config").action(() => {
         commands.config();
     });
-    commander_1.default.command("test").action(function () {
-        console.log(JSON.parse(fs_1.default.readFileSync("".concat(config_1.DEFAULT_DIR, "/config.json"), "utf-8")));
+    program.command("test").action(() => {
+        console.log(JSON.parse(fs.readFileSync(`${DEFAULT_DIR}/config.json`, "utf-8")));
     });
-    commander_1.default.parse(process.argv);
+    program.parse(process.argv);
 };
 main();

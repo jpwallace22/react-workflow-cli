@@ -18,12 +18,14 @@
     "react-workflow": "./dist/index.js",
     "rwf": "./dist/index.js"
   },
+  "type": "module",
   "dependencies": {
     "chalk": "^5.0.1",
     "commander": "^2.19.0",
     "comment-parser": "^0.7.2",
     "inquirer": "^6.2.2",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react-workflow-cli": "https://github.com/jpwallace22/react-workflow-cli"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",
