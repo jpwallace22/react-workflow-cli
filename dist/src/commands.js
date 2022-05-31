@@ -2,11 +2,8 @@ import fs from "fs";
 import inquirer from "inquirer";
 import * as messages from "./messages.js";
 import { DEFAULT_TEMPLATE_DIR, DEFAULT_PATH, TEMPLATE_DIR } from "./config.js";
-import chalk from "chalk";
-const warnAndExit = (msg) => {
-    console.log(chalk.yellow(msg));
-    process.exit(-1);
-};
+import { makeDirAndWriteRecursive, readAndWrite, warnAndExit, } from "../lib/functions.js";
+import path from "path";
 class Commands {
     help() {
         console.log(messages.HELP_MSG);
@@ -16,7 +13,7 @@ class Commands {
             if (TEMPLATE_DIR === DEFAULT_TEMPLATE_DIR)
                 warnAndExit(messages.ALREADY_INIT);
             inquirer.prompt(questions).then(function (answers) {
-                fs.cpSync(TEMPLATE_DIR, DEFAULT_TEMPLATE_DIR, { recursive: true });
+                fs.cpSync(`${TEMPLATE_DIR}/${answers.storybook ? "Storybook" : null}${answers.typescript ? "Typescript" : null}Templates`, DEFAULT_TEMPLATE_DIR, { recursive: true });
                 fs.writeFileSync(`${DEFAULT_TEMPLATE_DIR}/config.json`, JSON.stringify(answers));
                 console.log(messages.PROJ_INIT);
             });
@@ -26,33 +23,27 @@ class Commands {
             warnAndExit(`Cannot create the directory "${DEFAULT_TEMPLATE_DIR}".`);
         }
     }
-    add(name, path = DEFAULT_PATH) {
-        if (!fs.existsSync(path))
+    add(name, userPath = DEFAULT_PATH) {
+        if (!fs.existsSync(userPath))
             warnAndExit(messages.WRONG_PATH_MSG);
-        const newPath = `${path}/${name}`;
+        const newPath = path.resolve(userPath, name);
         try {
             fs.mkdirSync(newPath, { recursive: true });
         }
         catch (err) {
             console.log(err);
-            warnAndExit(`Cannot create the directory "${path}/${name}".`);
+            warnAndExit(`Cannot create the directory "${userPath}/${name}".`);
         }
-        const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
         const files = fs
             .readdirSync(DEFAULT_TEMPLATE_DIR)
             .filter(file => file !== "config.json");
         files.forEach(file => {
-            try {
-                const data = fs.readFileSync(`${DEFAULT_TEMPLATE_DIR}/${file}`, "utf-8");
-                const updatedData = data.replace(regex, name);
-                const updatedFileName = file.replace("$name", name);
-                fs.writeFileSync(`${newPath}/${file}`, updatedData, "utf-8");
-                fs.renameSync(`${newPath}/${file}`, `${newPath}/${updatedFileName}`);
-                console.log(`Created ${newPath}/${updatedFileName}`);
+            const originPath = path.resolve(DEFAULT_TEMPLATE_DIR, file);
+            if (fs.statSync(originPath).isDirectory()) {
+                makeDirAndWriteRecursive(originPath, `${newPath}/${file.replace("$name", name)}`, name);
             }
-            catch (err) {
-                console.log(err);
-                warnAndExit(`Error creating "${newPath}/${file.replace("$name", name)}".`);
+            else {
+                readAndWrite(file, name, originPath, newPath);
             }
         });
     }
@@ -67,7 +58,13 @@ const questions = [
     {
         type: "confirm",
         name: "storybook",
-        message: "Do you want to enable the support for Storybook?",
+        message: "Do you want to enable support for Storybook?",
+        default: true,
+    },
+    {
+        type: "confirm",
+        name: "typescript",
+        message: "Does your project use Typescript?",
         default: true,
     },
 ];

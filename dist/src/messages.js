@@ -39,9 +39,9 @@ export const PROJ_INIT = boxen(`${chalk.green("Successfully Initialized")}
   
   Templates & config.json are located in the .react-templates directory
 
-  Edit the templates to best fit your project needs. Anywhere you add ${chalk.cyan("$name")} will be replaced with the designated components name upon creation.
+  Edit the templates to best fit your project needs. Anywhere you add ${chalk.cyan("$name")} will be replaced with the designated components name upon creation. It is inherently recursive, so feel free to add sub-directories as well. 
 
   run ${chalk.bgGrey(" rwf info ")} for more information.
 
-  Stay Classy `, { borderStyle: 'classic', padding: 1 });
-export const ALREADY_INIT = `The project has already been initialized. You can edit the config in the the .react-templates directory.`;
+  🤘`, { borderStyle: 'classic', padding: 1 });
+export const ALREADY_INIT = `The project has already been initialized. You can edit the config or templates in the the .react-templates directory.`;

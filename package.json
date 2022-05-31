@@ -1,11 +1,11 @@
 {
   "name": "react-workflow-cli",
-  "version": "1.4.1",
+  "version": "1.1.0",
   "description": "A CLI for creating new react components",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && tsc && cp -R ./templates ./dist",
+    "build": "rimraf dist && cp -R ./templateDir ./dist && tsc",
     "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "author": "Justin Wallace",
