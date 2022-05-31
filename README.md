@@ -1,80 +1,88 @@
-# create-react-component
+# react-workflow-cli
 
-Add new commands in the command line to create react components very fast and easily.
+- Create component files structure quickly and easily with the CLI.
+- Add custom templates to make whatever structure best suits your repo.
 
 ## Setup
 
-To setup create-react-component, you need to run `npm install -g react-workflow-cli`.
+To setup react-workflow-cli, you need to run:
 
-This command will install the CLI globally, so that you can run it in any react project from now on.
+```bash
+# with npm
+npm i -g react-workflow-cli
+
+# with yarn
+yard global add react-workflow-cli
+```
+
+This command will install the CLI globally allowing you to run it in any repo. (Though it is called react-workflow-cli, you can take advantage of the template system to use it for any project)
 
 ## Usage
 
-To create a new react component, you need to run `react-workflow-cli add <ComponentName>`, or `rwf add <ComponentName>`.
-This will create a new component and its default dependencies in the default directory (src/components).
-
-In case you don't want to use the default directory, you can pass a custom path as a parameter (i.e. `rwf add <ComponentName> --path=my/custom/dir`) This will create the element in the provided directory.
-
-If you want to have a look at all the functionalities of the the CLI, just run `rwf help`, and all the functionalities will be explained.
-
 ### Initialize a new project
 
-If you need a more advanced experience with the CLI, you'd probabily want to instantiate the CLI for your current project, so that you will be able to customize some more settings.
-In order to do that, you need to run `rwf init`. This will create a folder `.react-templates` in the path where you run the command.
+If you need a more advanced experience with the CLI, you will probably want to instantiate the CLI for your current project, so that you will be able to customize your settings and templates.
+
+In order to do that, simply run
+
+```bash
+react-workflow-cli init
+# or
+rwf init
+```
+
+This will create a folder `.react-templates` in the path where you run the command.
 During the setup, you will be asked a few questions required to create the configuration file.
 
-You will be able to customize the file by editing it directly (`.react-templates/config.json`) or by running `rwf config`.
+You will be able to customize the file by editing it directly (`.react-templates/config.json`).
 
 ### Manage templates
 
-You can manage the templates by adding/removing or editing the files inside the `.react-templates` folder.
-Use `$name` inside the file or inside the file name. Each `$name` will be replaced with the actual name of the component provided when you run the command.
+You can manage the templates by adding/removing/editing the files and folders inside the `.react-templates` directory.
+Use `$name` inside of the template directory as a placeholder for the component name. Each `$name` will be replaced with the actual name of the component provided when you run the `add` command.
 
-#### Advanced settings
+### Create a new component
 
-You can use advanced settings for each file. For example, you can change the case type used in the file name.
-To do that, you should add a comment at the beginning of the file you want to edit, like in the example:
+To create a new react component, you just need to run:
 
-```
-/**
- * @caseType kebabCase
- */
-```
-
-In the previous example, the file will be saved in `kebabCase`. You can choose from one of the following: `kababCase`, `snakeCase`, `CamelCase`. By default, if you don't provide any value, it will be used `PascalCase`.
-
-At this point, as your file name has been changed, you might need to change the name used in the dependencies. In order to do that, you need to edit slightly the file where you are including the dependency.
-For example, if you want to include a css file in your project and you want that file to be saved with kebab case, you need to edit your file from
-
-```
-import styles from './$name.module.scss';
+```bash
+react-workflow-cli add <ComponentName>
+# or
+rwf add <ComponentName>
 ```
 
-to
+This will create a new component and all of its default dependencies in the default directory **(src/components)**.
 
-```
-import styles from './$(name, {"caseType": "kebabCase"}).module.scss';
+### New component with a custom path
+
+In case you don't want to use the default directory, you can pass a custom path as a parameter. This will create the Component in the provided directory.
+
+```bash
+react-workflow-cli add <ComponentName> --path my/custom/path
+# or
+rwf add <ComponentName> -p my/custom/path
 ```
 
-As you can see in the example about, you are passing a JSON object as second paramether of a function. In the JSON object, you provide the `caseType` to `kebabCase`.
+If you want to have a look at all the functionalities of the the CLI, just run `rwf info`, and all the functionalities will be explained.
 
 ## Contribution
 
-Please, feel free to contribute to the project, in order to create something awesome!
+Please, feel free to contribute to the project!
 
 Here are some things to be done:
--Convert to typescript
--Add linting
--Add tests
+
+- Add a ability for custom cases (kebab-case, camelCase, etc...)
+- Add tests
+- Save custom paths to config.json to be used with --path
+
+### Author
+
+Justin Wallace (https://github.com/jpwallace22)
 
 ### Contributors
-
-Gabriele Venturi (https://github.com/gventuri)
 
 Gianni Valdambrini (https://github.com/gvaldambrini)
 
 Roberto Di Lillo (https://github.com/koop4)
 
 Valentino Gagliardi (https://github.com/valentinogagliardi/)
-
-Giuseppe Chiarella (https://github.com/Ogek/)

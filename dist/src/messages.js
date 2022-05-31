@@ -1,42 +1,47 @@
-import { DEFAULT_PATH } from "./config";
 import chalk from "chalk";
-export const HELP_MSG = `
-${chalk.blue("Name")}
-    react-workflow-cli — react cli to create templated component
+import boxen from "boxen";
+import { DEFAULT_PATH } from "./config.js";
+export const HELP_MSG = boxen(`
+${chalk.cyan.bold("Description:")} 
+react-workflow-cli allows you to quickly create React components by providing an interface to implement your own custom template.
 
-DESCRIPTION
-    react-workflow-cli allows to create react components easily providing an interface
-    implement your own template.
+${chalk.cyan.bold("Usage:")} 
+react-workflow <command> [name] [options]   ||
+rwf <command> [name] [options]
 
-SYNOPSIS
-    react-workflow-cli <command> [name] [options]
+${chalk.cyan.bold("Commands:")} 
+${chalk.green("init")}     Initialize the cli
+${chalk.green("add")}      Creates a new component using the provided name. ${chalk.bold(`default path: '${DEFAULT_PATH}'`)}. 
+${chalk.green("info")}     show this screen (so meta)
 
-AVAILABLE COMMAND:
-    init    initialize the cli
-    config  change the default settings of the cli. you need to initialize the cli before
-    add     creates a new component using the provided name. default path: '${DEFAULT_PATH}'
+${chalk.cyan.bold("Options:")} 
+${chalk.green("add")} ${chalk.yellow("-p | --path")}  override default path.
 
-OPTIONS
-    -path   override default path.
+${chalk.cyan.bold("License:")}
+react-workflow-cli and all dependencies are under the MIT license
 
-COPYRIGHT
-    react-workflow-cli is available under the MIT license.
-    react-workflow-cli also includes external libraries that are available under MIT license.
+${chalk.cyan.bold("Author:")}
+Justin Wallace (${chalk.underline('https://github.com/jpwallace22')})
 
-SEE ALSO
-    GitHub repository & Issue Tracker: https://github.com/gventuri/create-react-component
-    Npmjs: https://www.npmjs.com/package/react-workflow-cli
-    Website:
-    Documentation:
+${chalk.cyan.bold("Contributors:")} 
+Gianni Valdambrini (${chalk.underline('https://github.com/gvaldambrini')})
+Roberto Di Lillo (${chalk.underline('https://github.com/koop4')})
+Valentino Gagliardi (${chalk.underline('https://github.com/valentinogagliardi/')})
+`, {
+    textAlignment: "left",
+    borderStyle: "classic",
+    padding: 1,
+    title: chalk.magentaBright.bold.bgCyanBright("---- React Workflow CLI ----"),
+    titleAlignment: "center",
+});
+export const WRONG_PATH_MSG = `The path provided does not exist. Double-check your spelling and try again.`;
+export const PROJ_INIT = boxen(`${chalk.green("Successfully Initialized")}
+  
+  Templates & config.json are located in the .react-templates directory
 
-AUTHORS
-    Justin Wallace (https://github.com/jpwallace22)
+  Edit the templates to best fit your project needs. Anywhere you add ${chalk.cyan("$name")} will be replaced with the designated components name upon creation.
 
-CONTRIBUTORS
-    Gianni Valdambrini (https://github.com/gvaldambrini)
-    Roberto Di Lillo (https://github.com/koop4)
-    Valentino Gagliardi (https://github.com/valentinogagliardi/)
-`;
-export const WRONG_PATH_MSG = `The path provided is wrong`;
-export const PROJ_INIT = `The project has been initialized`;
-export const ALREADY_INIT = `The project has already been initialized`;
+  run ${chalk.bgGrey(" rwf info ")} for more information.
+
+  Stay Classy `, { borderStyle: 'classic', padding: 1 });
+export const ALREADY_INIT = `The project has already been initialized. You can edit the config in the the .react-templates directory.`;

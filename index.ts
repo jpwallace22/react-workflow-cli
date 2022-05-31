@@ -7,15 +7,16 @@
 
 import fs from "fs";
 import program from "commander";
-import Commands from "./src/commands";
-import { DEFAULT_DIR } from "./src/config";
+import Commands from "./src/commands.js";
+import { DEFAULT_TEMPLATE_DIR } from "./src/config.js";
 
-const main = () => {
+(() => {
   const commands = new Commands();
 
   program.arguments("<cmd> [name]");
 
   program.command("help").action(() => commands.help());
+  program.command("info").action(() => commands.help());
 
   program
     .command("add [name]")
@@ -28,17 +29,13 @@ const main = () => {
     commands.init();
   });
 
-  program.command("config").action(() => {
-    commands.config();
-  });
-
   program.command("test").action(() => {
     console.log(
-      JSON.parse(fs.readFileSync(`${DEFAULT_DIR}/config.json`, "utf-8"))
+      JSON.parse(
+        fs.readFileSync(`${DEFAULT_TEMPLATE_DIR}/config.json`, "utf-8")
+      )
     );
   });
 
   program.parse(process.argv);
-};
-
-main();
+})();

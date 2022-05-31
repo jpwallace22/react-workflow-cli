@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jpwallace22/react-workflow-cli.git"
+    "url": "https://github.com/jpwallace22/react-workflow-cli"
   },
   "bin": {
     "react-workflow": "./dist/index.js",
@@ -20,6 +20,7 @@
   },
   "type": "module",
   "dependencies": {
+    "boxen": "^6.2.1",
     "chalk": "^5.0.1",
     "commander": "^2.19.0",
     "comment-parser": "^0.7.2",

@@ -1,155 +1,90 @@
 import fs from "fs";
 import inquirer from "inquirer";
-import * as messages from "./messages";
-import parser from "comment-parser";
-import _ from "lodash";
 
-import { CONFIG, DEFAULT_DIR, DEFAULT_PATH, DIR } from "./config";
+import * as messages from "./messages.js";
+import { DEFAULT_TEMPLATE_DIR, DEFAULT_PATH, TEMPLATE_DIR } from "./config.js";
+import chalk from "chalk";
+
+const warnAndExit = (msg: string) => {
+  console.log(chalk.yellow(msg));
+  process.exit(-1);
+};
 
 class Commands {
-  /**
-   * HELP
-   */
   help() {
     console.log(messages.HELP_MSG);
   }
 
-  /**
-   * INIT
-   */
   init() {
     try {
-      if (DIR === DEFAULT_DIR) warnAndExit(messages.ALREADY_INIT);
+      if (TEMPLATE_DIR === DEFAULT_TEMPLATE_DIR)
+        warnAndExit(messages.ALREADY_INIT);
 
-      fs.mkdirSync(DEFAULT_DIR, { recursive: true });
-
-      const files = fs.readdirSync(DIR);
-      for (let file of files) {
-        const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
-        fs.writeFile(`${DEFAULT_DIR}/${file}`, data, err => {
-          if (err) {
-            console.log(`Cannot create "${file}"`);
-          } else {
-            console.log(`"${file}" created`);
-          }
-        });
-      }
-
-      setTimeout(() => this.config(), 200);
-
-      console.log(messages.PROJ_INIT);
+      inquirer.prompt(questions).then(function (answers) {
+        fs.cpSync(TEMPLATE_DIR, DEFAULT_TEMPLATE_DIR, { recursive: true });
+        fs.writeFileSync(
+          `${DEFAULT_TEMPLATE_DIR}/config.json`,
+          JSON.stringify(answers)
+        );
+        console.log(messages.PROJ_INIT);
+      });
     } catch (err) {
       console.log(err);
-      warnAndExit(`Cannot create the directory "${DEFAULT_DIR}".`);
+      warnAndExit(`Cannot create the directory "${DEFAULT_TEMPLATE_DIR}".`);
     }
   }
 
-  /**
-   * CONFIG
-   */
-  config() {
-    const questions = [
-      {
-        type: "input",
-        name: "path",
-        message:
-          "Please, provide the path where your components will be stored",
-        default: "src/components",
-      },
-      {
-        type: "confirm",
-        name: "storybook",
-        message: "Do you want to enable the support for Storybook?",
-        default: true,
-      },
-    ];
-
-    inquirer.prompt(questions).then(function (answers) {
-      try {
-        fs.writeFileSync(`${DEFAULT_DIR}/config.json`, JSON.stringify(answers));
-      } catch (err) {
-        warnAndExit(`You need to initialize the cli before you configure it.`);
-      }
-    });
-  }
-
-  /**
-   * ADD
-   */
-  add(name, path) {
-    path = path || DEFAULT_PATH;
-
+  add(name: string, path: string = DEFAULT_PATH) {
     if (!fs.existsSync(path)) warnAndExit(messages.WRONG_PATH_MSG);
+    const newPath = `${path}/${name}`;
 
     try {
-      fs.mkdirSync(`${path}/${name}/`, { recursive: true });
+      fs.mkdirSync(newPath, { recursive: true });
     } catch (err) {
+      console.log(err);
       warnAndExit(`Cannot create the directory "${path}/${name}".`);
     }
 
-    const templates = fs
-      .readdirSync(DIR)
-      .filter(
-        file =>
-          file !== "config.json" &&
-          (CONFIG.storybook === true || file !== "$name.stories.js")
-      );
-    for (let template of templates) createFile(template, name, path);
+    const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+    const files = fs
+      .readdirSync(DEFAULT_TEMPLATE_DIR)
+      .filter(file => file !== "config.json");
+
+    files.forEach(file => {
+      try {
+        const data = fs.readFileSync(
+          `${DEFAULT_TEMPLATE_DIR}/${file}`,
+          "utf-8"
+        );
+        const updatedData = data.replace(regex, name);
+        const updatedFileName = file.replace("$name", name);
+
+        fs.writeFileSync(`${newPath}/${file}`, updatedData, "utf-8");
+        fs.renameSync(`${newPath}/${file}`, `${newPath}/${updatedFileName}`);
+        console.log(`Created ${newPath}/${updatedFileName}`);
+      } catch (err) {
+        console.log(err);
+        warnAndExit(
+          `Error creating "${newPath}/${file.replace("$name", name)}".`
+        );
+      }
+    });
   }
 }
 
-/**
- * CREATE FILE
- */
-const createFile = (file, name, path) => {
-  let fileName = file.replace("$name", name);
-
-  if (fs.existsSync(`${path}/${name}/${fileName}`)) {
-    console.log(`File "${fileName}" already exists, skipping.`);
-    return;
-  }
-
-  const data = fs.readFileSync(`${DIR}/${file}`, "utf-8");
-
-  const parsed = parser(data);
-  const tags = _.get(parsed, "0.tags", []);
-  tags.map(({ tag, name }) => {
-    if (tag === "caseType") {
-      const splittedFilename = fileName.split(".");
-      fileName = `${_[name](
-        splittedFilename.slice(0, splittedFilename.length - 1).join(".")
-      )}.${splittedFilename.slice(splittedFilename.length - 1)[0]}`;
-    }
-  });
-
-  const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
-  const finalData = data.replace(regex, function (match, _p1, _p2, p3) {
-    let newName = name;
-
-    if (p3) {
-      _.map(JSON.parse(p3), (value, key) => {
-        if (key === "caseType") newName = _[value](newName);
-      });
-    }
-
-    return newName;
-  });
-
-  fs.writeFileSync(`${path}/${name}/${fileName}`, finalData, err => {
-    if (err) {
-      console.log(`Cannot create "${fileName}"`);
-    } else {
-      console.log(`"${fileName}" has been created`);
-    }
-  });
-};
-
-/**
- * WARN AND EXIT
- */
-const warnAndExit = error => {
-  console.warn(error);
-  process.exit(-1);
-};
+const questions = [
+  {
+    type: "input",
+    name: "path",
+    message: "Please, provide the path where your components will be stored",
+    default: DEFAULT_PATH,
+  },
+  {
+    type: "confirm",
+    name: "storybook",
+    message: "Do you want to enable the support for Storybook?",
+    default: true,
+  },
+];
 
 export default Commands;
