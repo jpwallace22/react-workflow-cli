@@ -1,7 +1,15 @@
 {
   "name": "react-workflow-cli",
   "version": "1.1.0",
-  "description": "A CLI for creating new react components",
+  "description": "A CLI for creating new react components and streamlining your workflow",
+  "keywords": [
+    "react",
+    "cli",
+    "create",
+    "component",
+    "generate",
+    "workflow"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,10 +31,7 @@
     "boxen": "^6.2.1",
     "chalk": "^5.0.1",
     "commander": "^2.19.0",
-    "comment-parser": "^0.7.2",
-    "inquirer": "^6.2.2",
-    "lodash": "^4.17.15",
-    "react-workflow-cli": "https://github.com/jpwallace22/react-workflow-cli"
+    "inquirer": "^6.2.2"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1",
