@@ -81,8 +81,5 @@ Justin Wallace (https://github.com/jpwallace22)
 
 ### Contributors
 
-Gianni Valdambrini (https://github.com/gvaldambrini)
-
-Roberto Di Lillo (https://github.com/koop4)
-
+Gabriele Venturi (https://github.com/gventuri)
 Valentino Gagliardi (https://github.com/valentinogagliardi/)
