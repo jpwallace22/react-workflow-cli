@@ -24,9 +24,8 @@ ${chalk.cyan.bold("Author:")}
 Justin Wallace (${chalk.underline('https://github.com/jpwallace22')})
 
 ${chalk.cyan.bold("Contributors:")} 
-Gianni Valdambrini (${chalk.underline('https://github.com/gvaldambrini')})
-Roberto Di Lillo (${chalk.underline('https://github.com/koop4')})
-Valentino Gagliardi (${chalk.underline('https://github.com/valentinogagliardi/')})
+Gabriele Venturi (${chalk.underline('https://github.com/gventuri')})
+Valentino Gagliardi (${chalk.underline('https://github.com/valentinogagliardi')})
 `, {
     textAlignment: "left",
     borderStyle: "classic",

@@ -15,12 +15,14 @@ import { DEFAULT_TEMPLATE_DIR } from "./src/config.js";
 
   program.arguments("<cmd> [name]");
 
+  program.version("1.1.0");
+
   program.command("help").action(() => commands.help());
   program.command("info").action(() => commands.help());
 
   program
     .command("add [name]")
-    .option("-p, --path [path]")
+    .option("-p, --path [path]", "overwrite the default path")
     .action((name, opt) => {
       commands.add(name, opt.path);
     });
