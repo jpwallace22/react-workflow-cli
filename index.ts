@@ -15,7 +15,7 @@ import { DEFAULT_TEMPLATE_DIR } from "./src/config.js";
 
   program.arguments("<cmd> [name]");
 
-  program.version("1.1.0");
+  program.version("1.1.1");
 
   program.command("help").action(() => commands.help());
   program.command("info").action(() => commands.help());
