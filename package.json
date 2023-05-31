@@ -1,6 +1,6 @@
 {
   "name": "react-workflow-cli",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "A CLI for creating new react components and streamlining your workflow",
   "keywords": [
     "react",
