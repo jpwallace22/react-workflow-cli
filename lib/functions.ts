@@ -22,10 +22,14 @@ export const readAndWrite = (
   originPath: string,
   newPath: string
 ) => {
-  const regex = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+  const capitalName = /\$+(\()?Name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+  const lowercaseName = /\$+(\()?name+(, )?(\{([\D]{0,})?\})?(\))?/gm;
+
   try {
     const data = fs.readFileSync(originPath, "utf-8");
-    const updatedData = data.replace(regex, name);
+    const updatedData = data
+      .replace(capitalName, name)
+      .replace(lowercaseName, name);
 
     fs.writeFileSync(`${newPath}/${file}`, updatedData, "utf-8");
     fs.renameSync(

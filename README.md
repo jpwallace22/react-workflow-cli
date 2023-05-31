@@ -12,7 +12,7 @@ To setup react-workflow-cli, you need to run:
 npm i -g react-workflow-cli
 
 # with yarn
-yard global add react-workflow-cli
+yarn global add react-workflow-cli
 ```
 
 This command will install the CLI globally allowing you to run it in any repo. (Though it is called react-workflow-cli, you can take advantage of the template system to use it for any project)
